@@ -1,22 +1,69 @@
+extensions [array]
+
+globals [strategies]
+
 turtles-own [
   local_satisfaction ;; agent satisfaction in the cell (patch)
   global_satisfaction ;; overall agent satisfaction
-  strtegy  ;; the agent assigned strategy
+  strategy  ;; the agent assigned strategy
 ]
+
+to init_turtles
+
+  let i 0
+  let s 0
+  let color1 15
+
+  loop[
+     if i = NumberTurtles[
+      stop
+     ]
+
+     ask turtle i [
+       set strategy array:item strategies s
+       setxy random-pxcor random-pycor
+       set color s * 20 + color1
+     ]
+
+     set s s + 1
+     if s = array:length strategies [
+       set s 0
+     ]
+
+     set i i + 1
+   ]
+
+end
 
 to setup
   clear-all
-  let strategies [0.1 0.5 1.0]
-  create-turtles 100 [ set color green ]
+  set strategies array:from-list [0.1 0.5 1.0]
+  let tamanho  array:length strategies
+  create-turtles NumberTurtles [
+    set global_satisfaction 100
+    set local_satisfaction 20
+    hide-turtle
+   ]
 
-  let i 0
-  loop[
+  init_turtles
 
-    set i i+1
-     ask turtle i [
+  give_patch_color
 
-       ]
+end
+
+to give_patch_color
+  ask patches[
+    ifelse count turtles-here = 0 [
+      set pcolor white
     ]
+    [
+      ask max-one-of turtles-here [local_satisfaction] [
+        set pcolor color
+      ]
+    ]
+
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -44,6 +91,38 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
+
+SLIDER
+18
+76
+190
+109
+NumberTurtles
+NumberTurtles
+0
+1000
+987
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+60
+228
+126
+261
+NIL
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
