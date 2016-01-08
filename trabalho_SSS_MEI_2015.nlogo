@@ -101,7 +101,7 @@ NumberTurtles
 NumberTurtles
 0
 1000
-987
+1000
 1
 1
 NIL
@@ -123,6 +123,24 @@ NIL
 NIL
 NIL
 1
+
+PLOT
+674
+13
+874
+163
+NumberOfPlayers
+Turn
+Players
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -2674135 true "" "plot count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
