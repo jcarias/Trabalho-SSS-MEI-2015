@@ -6,6 +6,7 @@ turtles-own [
   local_satisfaction ;; agent satisfaction in the cell (patch)
   global_satisfaction ;; overall agent satisfaction
   strategy  ;; the agent assigned strategy
+  escalate?
 ]
 
 to init_turtles
@@ -55,6 +56,7 @@ to setup
   create-plot "PatchOwners"
 
   update-plot
+  reset-ticks
 end
 
 to give_patch_color
@@ -70,6 +72,92 @@ to give_patch_color
 
   ]
 end
+
+
+to go
+  ask patches[
+    if count turtles-here > 1 [
+      let tempTurtlesList []
+      ask turtles-here [ set tempTurtlesList lput self tempTurtlesList]
+
+      let firstPlayer -1
+      foreach tempTurtlesList [
+        ifelse firstPlayer = -1 [
+           set firstPlayer ?
+        ]
+        [
+           play firstPlayer ?
+           set firstPlayer -1
+        ]
+      ]
+    ]
+  ]
+
+  ask turtles with [global_satisfaction <= 0] [die]
+  ask turtles with [local_satisfaction <= 0] [setxy random-pxcor random-pycor
+                                              set local_satisfaction 20
+                                             ]
+
+  give_patch_color
+  update-plot
+  tick
+end
+
+to play[agent1 agent2]
+  obter_jogada agent1
+  obter_jogada agent2
+
+  let tipo_jogada_1 false
+  ask agent1 [set tipo_jogada_1 escalate?]
+
+  let tipo_jogada_2 false
+  ask agent2 [set tipo_jogada_2 escalate?]
+
+  let resultAgente1 0
+  let resultAgente2 0
+  if (tipo_jogada_1 = true) and (tipo_jogada_2 = true)
+  [
+    ;show "-10, -10"
+    set resultAgente1 -10
+    set resultAgente2 -10
+  ]
+   if (tipo_jogada_1 = true) and (tipo_jogada_2 = false)
+  [
+    ;;show "+1, -1"
+    set resultAgente1 1
+    set resultAgente2 -1
+  ]
+   if (tipo_jogada_1 = false) and (tipo_jogada_2 = true)
+   [
+    ;;show "-1, +1"
+    set resultAgente1 -1
+    set resultAgente2 1
+  ]
+  if (tipo_jogada_1 = false) and (tipo_jogada_2 = false)
+    [
+    ;;show "0, 0"
+    set resultAgente1 0
+    set resultAgente2 0
+  ]
+
+  ask agent1 [set local_satisfaction local_satisfaction + resultAgente1
+              set global_satisfaction global_satisfaction + resultAgente1
+  ]
+  ask agent2 [set local_satisfaction local_satisfaction + resultAgente2
+              set global_satisfaction global_satisfaction + resultAgente2
+  ]
+
+end
+
+;; obter a jogada em função da estratégia
+to obter_jogada [agente]
+  ask agente[
+    ifelse random-float 1.0 < strategy
+    [set escalate? true]
+    [set escalate? false]
+  ]
+end
+
 
 to create-plot [plotName]
   set-current-plot plotName
@@ -112,7 +200,7 @@ to update-plot-numberOfPlayers
     let penName word "Strategy: " colorPen
 
     set-current-plot-pen penName
-    plot count turtles with [pcolor = colorPen]
+    plot count turtles with [color = colorPen]
 
     set i i + 1
    ]
@@ -132,7 +220,7 @@ to update-plot-sumOfMoney
     let penName word "Strategy: " colorPen
 
     set-current-plot-pen penName
-    plot sum [global_satisfaction] of turtles with [pcolor = colorPen]
+    plot sum [global_satisfaction] of turtles with [color = colorPen]
 
     set i i + 1
    ]
@@ -161,10 +249,10 @@ end
 GRAPHICS-WINDOW
 210
 10
-649
-470
-16
-16
+493
+314
+-1
+-1
 13.0
 1
 10
@@ -175,10 +263,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
+0
+20
+0
+20
 0
 0
 1
@@ -194,17 +282,17 @@ NumberTurtles
 NumberTurtles
 0
 1000
-301
+1000
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-60
-228
-126
-261
+19
+161
+191
+194
 NIL
 setup
 NIL
@@ -218,10 +306,10 @@ NIL
 1
 
 PLOT
-674
-13
-874
-163
+535
+10
+735
+160
 NumberOfPlayers
 Turn
 Players
@@ -235,10 +323,10 @@ false
 PENS
 
 PLOT
-673
-180
-873
-330
+534
+177
+734
+327
 SumOfMoney
 Sum of Money
 Turns
@@ -252,10 +340,10 @@ false
 PENS
 
 PLOT
-675
-338
-875
-488
+536
+335
+736
+485
 PatchOwners
 Turn
 Owners
@@ -267,6 +355,23 @@ true
 false
 "" ""
 PENS
+
+BUTTON
+18
+118
+190
+151
+NIL
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+0
 
 @#$#@#$#@
 ## WHAT IS IT?
