@@ -50,6 +50,9 @@ to setup
 
   give_patch_color
 
+  create-plot
+  update-plot
+
 end
 
 to give_patch_color
@@ -64,6 +67,47 @@ to give_patch_color
     ]
 
   ]
+end
+
+to create-plot
+  set-current-plot "NumberOfPlayers"
+
+  let i 0
+
+  loop[
+     if i = array:length colors[
+      stop
+     ]
+
+    let colorPen array:item colors i
+    let penName word "Strategy: " colorPen
+
+    create-temporary-plot-pen penName
+    set-current-plot-pen penName
+    set-plot-pen-color colorPen
+
+    set i i + 1
+   ]
+end
+
+to update-plot
+  set-current-plot "NumberOfPlayers"
+
+  let i 0
+
+  loop[
+     if i = array:length colors[
+      stop
+     ]
+
+    let colorPen array:item colors i
+    let penName word "Strategy: " colorPen
+
+    set-current-plot-pen penName
+    plot count turtles with [pcolor = colorPen]
+
+    set i i + 1
+   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -141,7 +185,6 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -2674135 true "" "plot count turtles"
 
 @#$#@#$#@
 ## WHAT IS IT?
