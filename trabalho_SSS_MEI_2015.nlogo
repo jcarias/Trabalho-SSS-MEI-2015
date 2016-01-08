@@ -1,6 +1,6 @@
 extensions [array]
 
-globals [strategies]
+globals [strategies colors]
 
 turtles-own [
   local_satisfaction ;; agent satisfaction in the cell (patch)
@@ -12,7 +12,6 @@ to init_turtles
 
   let i 0
   let s 0
-  let color1 15
 
   loop[
      if i = NumberTurtles[
@@ -21,8 +20,8 @@ to init_turtles
 
      ask turtle i [
        set strategy array:item strategies s
+       set color array:item colors s
        setxy random-pxcor random-pycor
-       set color s * 20 + color1
      ]
 
      set s s + 1
@@ -38,6 +37,8 @@ end
 to setup
   clear-all
   set strategies array:from-list [0.1 0.5 1.0]
+  set colors array:from-list [green blue red]
+
   let tamanho  array:length strategies
   create-turtles NumberTurtles [
     set global_satisfaction 100
