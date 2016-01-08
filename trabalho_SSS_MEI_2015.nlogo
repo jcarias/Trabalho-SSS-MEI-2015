@@ -50,9 +50,11 @@ to setup
 
   give_patch_color
 
-  create-plot
-  update-plot
+  create-plot "NumberOfPlayers"
+  create-plot "SumOfMoney"
+  create-plot "PatchOwners"
 
+  update-plot
 end
 
 to give_patch_color
@@ -69,8 +71,8 @@ to give_patch_color
   ]
 end
 
-to create-plot
-  set-current-plot "NumberOfPlayers"
+to create-plot [plotName]
+  set-current-plot plotName
 
   let i 0
 
@@ -91,6 +93,12 @@ to create-plot
 end
 
 to update-plot
+  update-plot-numberOfPlayers
+  update-plot-sumOfMoney
+  update-plot-patchOwners
+end
+
+to update-plot-numberOfPlayers
   set-current-plot "NumberOfPlayers"
 
   let i 0
@@ -105,6 +113,46 @@ to update-plot
 
     set-current-plot-pen penName
     plot count turtles with [pcolor = colorPen]
+
+    set i i + 1
+   ]
+end
+
+to update-plot-sumOfMoney
+  set-current-plot "SumOfMoney"
+
+  let i 0
+
+  loop[
+     if i = array:length colors[
+      stop
+     ]
+
+    let colorPen array:item colors i
+    let penName word "Strategy: " colorPen
+
+    set-current-plot-pen penName
+    plot sum [global_satisfaction] of turtles with [pcolor = colorPen]
+
+    set i i + 1
+   ]
+end
+
+to update-plot-patchOwners
+  set-current-plot "PatchOwners"
+
+  let i 0
+
+  loop[
+     if i = array:length colors[
+      stop
+     ]
+
+    let colorPen array:item colors i
+    let penName word "Strategy: " colorPen
+
+    set-current-plot-pen penName
+    plot count patches with [pcolor = colorPen]
 
     set i i + 1
    ]
@@ -146,7 +194,7 @@ NumberTurtles
 NumberTurtles
 0
 1000
-1000
+300
 1
 1
 NIL
@@ -177,6 +225,40 @@ PLOT
 NumberOfPlayers
 Turn
 Players
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+
+PLOT
+673
+180
+873
+330
+SumOfMoney
+Sum of Money
+Turns
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+
+PLOT
+675
+338
+875
+488
+PatchOwners
+Turn
+Owners
 0.0
 10.0
 0.0
