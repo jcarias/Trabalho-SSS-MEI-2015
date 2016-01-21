@@ -37,8 +37,11 @@ end
 
 to setup
   clear-all
-  set strategies array:from-list [0.1 0.5 1.0]
-  set colors array:from-list [green blue red]
+;  set strategies array:from-list [0.1 0.5 1.0]
+;  set colors array:from-list [green blue red]
+
+  set strategies array:from-list [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
+  set colors array:from-list [green blue red orange yellow brown gray magenta cyan pink]
 
   let tamanho  array:length strategies
   create-turtles NumberTurtles [
