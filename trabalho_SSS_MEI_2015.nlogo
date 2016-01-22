@@ -7,6 +7,7 @@ turtles-own [
   global_satisfaction ;; overall agent satisfaction
   strategy  ;; the agent assigned strategy
   escalate?
+  local_ticks
 ]
 
 to init_turtles
@@ -46,10 +47,12 @@ to setup
   set strategies array:from-list [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
   set colors array:from-list [green blue red orange yellow brown gray magenta cyan pink]
   ]
+
   let tamanho  array:length strategies
   create-turtles NumberTurtles [
     set global_satisfaction 100
     set local_satisfaction 20
+    set local_ticks 0
     hide-turtle
    ]
 
@@ -71,9 +74,9 @@ to give_patch_color
       set pcolor white
     ]
     [
-      ask max-one-of turtles-here [local_satisfaction] [
-        set pcolor color
-      ]
+      let turtlesWithMaxGlobal turtles-here with-max [global_satisfaction]
+
+      ask max-one-of turtlesWithMaxGlobal [local_ticks] [ set pcolor color ]
     ]
 
   ]
@@ -104,7 +107,9 @@ to go
   ask turtles with [local_satisfaction <= 0] [set heading one-of[0 90 180 270]
                                               fd 1
                                               set local_satisfaction 20
+                                              set local_ticks 0
                                              ]
+  ask turtles with [local_satisfaction > 0] [set local_ticks local_ticks + 1]
 
   give_patch_color
   update-plot
@@ -301,7 +306,7 @@ NumberTurtles
 NumberTurtles
 0
 10000
-5032
+2102
 1
 1
 NIL
@@ -410,7 +415,7 @@ SWITCH
 329
 infinite_capital
 infinite_capital
-0
+1
 1
 -1000
 
