@@ -305,7 +305,7 @@ SLIDER
 NumberTurtles
 NumberTurtles
 0
-10000
+6000
 2102
 1
 1
@@ -404,7 +404,7 @@ SWITCH
 63
 Strategies3_10
 Strategies3_10
-1
+0
 1
 -1000
 
@@ -415,7 +415,7 @@ SWITCH
 329
 infinite_capital
 infinite_capital
-1
+0
 1
 -1000
 
@@ -427,9 +427,9 @@ SLIDER
 extra_gain
 extra_gain
 0
-100
+4
 0
-1
+0.1
 1
 NIL
 HORIZONTAL
