@@ -37,12 +37,15 @@ end
 
 to setup
   clear-all
-;  set strategies array:from-list [0.1 0.5 1.0]
-;  set colors array:from-list [green blue red]
 
+  ifelse Strategies3_10 [
+  set strategies array:from-list [0.1 0.5 1.0]
+  set colors array:from-list [green blue red]
+  ]
+  [
   set strategies array:from-list [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
   set colors array:from-list [green blue red orange yellow brown gray magenta cyan pink]
-
+  ]
   let tamanho  array:length strategies
   create-turtles NumberTurtles [
     set global_satisfaction 100
@@ -94,15 +97,26 @@ to go
         ]
       ]
     ]
+
   ]
 
   ask turtles with [global_satisfaction <= 0] [die]
-  ask turtles with [local_satisfaction <= 0] [setxy random-pxcor random-pycor
+  ask turtles with [local_satisfaction <= 0] [set heading one-of[0 90 180 270]
+                                              fd 1
                                               set local_satisfaction 20
                                              ]
 
   give_patch_color
   update-plot
+
+  ;let contador 0
+  let contador count patches with[ count turtles-here > 1]
+
+  if contador = 0 [
+    stop
+    ]
+
+
   tick
 end
 
@@ -143,14 +157,16 @@ to play[agent1 agent2]
     set resultAgente2 0
   ]
 
-  ask agent1 [set local_satisfaction local_satisfaction + resultAgente1
-              set global_satisfaction global_satisfaction + resultAgente1
+  ask agent1 [set local_satisfaction local_satisfaction + resultAgente1 + extra_gain
+              if not infinite_capital [set global_satisfaction global_satisfaction + resultAgente1 + extra_gain]
   ]
-  ask agent2 [set local_satisfaction local_satisfaction + resultAgente2
-              set global_satisfaction global_satisfaction + resultAgente2
+  ask agent2 [set local_satisfaction local_satisfaction + resultAgente2 + extra_gain
+              if not infinite_capital [set global_satisfaction global_satisfaction + resultAgente2 + extra_gain]
   ]
 
 end
+
+
 
 ;; obter a jogada em função da estratégia
 to obter_jogada [agente]
@@ -284,8 +300,8 @@ SLIDER
 NumberTurtles
 NumberTurtles
 0
-1000
-1000
+10000
+5032
 1
 1
 NIL
@@ -309,10 +325,10 @@ NIL
 1
 
 PLOT
-535
-10
-735
-160
+525
+17
+1246
+185
 NumberOfPlayers
 Turn
 Players
@@ -326,10 +342,10 @@ false
 PENS
 
 PLOT
-534
-177
-734
-327
+525
+192
+1245
+401
 SumOfMoney
 Sum of Money
 Turns
@@ -343,10 +359,10 @@ false
 PENS
 
 PLOT
-536
-335
-736
-485
+527
+410
+1236
+630
 PatchOwners
 Turn
 Owners
@@ -375,6 +391,43 @@ NIL
 NIL
 NIL
 0
+
+SWITCH
+19
+30
+168
+63
+Strategies3_10
+Strategies3_10
+0
+1
+-1000
+
+SWITCH
+20
+205
+168
+238
+infinite_capital
+infinite_capital
+0
+1
+-1000
+
+SLIDER
+19
+255
+56
+405
+extra_gain
+extra_gain
+0
+100
+0
+1
+1
+NIL
+VERTICAL
 
 @#$#@#$#@
 ## WHAT IS IT?
