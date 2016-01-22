@@ -404,10 +404,10 @@ Strategies3_10
 -1000
 
 SWITCH
-20
-205
-168
-238
+18
+296
+191
+329
 infinite_capital
 infinite_capital
 0
@@ -417,8 +417,8 @@ infinite_capital
 SLIDER
 19
 255
-56
-405
+191
+288
 extra_gain
 extra_gain
 0
@@ -427,7 +427,7 @@ extra_gain
 1
 1
 NIL
-VERTICAL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
