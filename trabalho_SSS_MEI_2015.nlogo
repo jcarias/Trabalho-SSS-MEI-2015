@@ -12,26 +12,23 @@ turtles-own [
 
 to init_turtles
 
-  let i 0
   let s 0
 
   loop[
-     if i = NumberTurtles[
-      stop
-     ]
 
-     ask turtle i [
+     if s = array:length strategies [ stop ]
+
+     create-turtles NumberTurtles [
+       set global_satisfaction 100
+       set local_satisfaction 20
+       set local_ticks 0
        set strategy array:item strategies s
        set color array:item colors s
        setxy random-pxcor random-pycor
+       hide-turtle
      ]
 
      set s s + 1
-     if s = array:length strategies [
-       set s 0
-     ]
-
-     set i i + 1
    ]
 
 end
@@ -47,14 +44,6 @@ to setup
   set strategies array:from-list [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
   set colors array:from-list [green blue red orange yellow brown gray magenta cyan pink]
   ]
-
-  let tamanho  array:length strategies
-  create-turtles NumberTurtles [
-    set global_satisfaction 100
-    set local_satisfaction 20
-    set local_ticks 0
-    hide-turtle
-   ]
 
   init_turtles
 
@@ -114,13 +103,9 @@ to go
   give_patch_color
   update-plot
 
-  ;let contador 0
-  let contador count patches with[ count turtles-here > 1]
-
-  if contador = 0 [
-    stop
-    ]
-
+  ;STOP CONDITIONS
+  if count patches with[ count turtles-here > 1] = 0 [ stop ]
+  if ticks >= NumberOfTicks [ stop ]
 
   tick
 end
@@ -305,8 +290,8 @@ SLIDER
 NumberTurtles
 NumberTurtles
 0
-6000
-2102
+4000
+1197
 1
 1
 NIL
@@ -433,6 +418,17 @@ extra_gain
 1
 NIL
 HORIZONTAL
+
+INPUTBOX
+16
+340
+171
+400
+NumberOfTicks
+5000
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
