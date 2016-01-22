@@ -404,7 +404,7 @@ SWITCH
 63
 Strategies3_10
 Strategies3_10
-0
+1
 1
 -1000
 
@@ -781,6 +781,53 @@ NetLogo 5.2.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="3 Estratégias" repetitions="10" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles with [strategy = 0.1]</metric>
+    <metric>count turtles with [strategy = 0.5]</metric>
+    <metric>count turtles with [strategy = 1.0]</metric>
+    <enumeratedValueSet variable="infinite_capital">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Strategies3_10">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extra_gain">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="NumberTurtles">
+      <value value="2102"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="11 Estratégias" repetitions="10" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles with [strategy = 0.1]</metric>
+    <metric>count turtles with [strategy = 0.2]</metric>
+    <metric>count turtles with [strategy = 0.3]</metric>
+    <metric>count turtles with [strategy = 0.4]</metric>
+    <metric>count turtles with [strategy = 0.5]</metric>
+    <metric>count turtles with [strategy = 0.6]</metric>
+    <metric>count turtles with [strategy = 0.7]</metric>
+    <metric>count turtles with [strategy = 0.8]</metric>
+    <metric>count turtles with [strategy = 0.9]</metric>
+    <metric>count turtles with [strategy = 1.0]</metric>
+    <enumeratedValueSet variable="infinite_capital">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Strategies3_10">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extra_gain">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="NumberTurtles">
+      <value value="2102"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
