@@ -10,6 +10,7 @@ turtles-own [
   escalate?
   local_ticks
   total_movements
+  played? ;;played in the last interation
 ]
 
 patches-own [
@@ -61,6 +62,7 @@ to setup
   create-plot "SumOfMoney"
   create-plot "PatchOwners"
   create-plot "Movements"
+  create-plot "PlayersThatPlayed"
 
   reset-ticks
   update-plot
@@ -83,6 +85,9 @@ end
 
 
 to go
+
+  ask turtles [ set played?  false ]
+
   ask patches[
     if count turtles-here > 1 [
       let tempTurtlesList []
@@ -162,9 +167,11 @@ to play[agent1 agent2]
 
   ask agent1 [set local_satisfaction local_satisfaction + resultAgente1 + extra_gain
               if not infinite_capital [set global_satisfaction global_satisfaction + resultAgente1 + extra_gain]
+              set played? true
   ]
   ask agent2 [set local_satisfaction local_satisfaction + resultAgente2 + extra_gain
               if not infinite_capital [set global_satisfaction global_satisfaction + resultAgente2 + extra_gain]
+              set played? true
   ]
 
 end
@@ -207,6 +214,7 @@ to update-plot
   update-plot-sumOfMoney
   update-plot-patchOwners
   update-plot-movements
+  update-plot-playersThatPlayed
 end
 
 to update-plot-numberOfPlayers
@@ -291,12 +299,35 @@ to update-plot-movements
     set i i + 1
    ]
 end
+
+to update-plot-playersThatPlayed
+  set-current-plot "PlayersThatPlayed"
+
+  let i 0
+
+  loop[
+     if i = array:length colors[
+      stop
+     ]
+
+    let colorPen array:item colors i
+    let penName word "Strategy: " colorPen
+
+    set-current-plot-pen penName
+
+    ifelse ticks = 0
+    [plot 0]
+    [plot count turtles with [strategy = array:item strategies i and played?]]
+
+    set i i + 1
+   ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-493
-314
+227
+316
+510
+620
 -1
 -1
 13.0
@@ -320,10 +351,10 @@ ticks
 30.0
 
 SLIDER
-18
-76
-190
-109
+21
+328
+193
+361
 NumberTurtles
 NumberTurtles
 0
@@ -335,10 +366,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-19
-161
-191
+22
+413
 194
+446
 NIL
 setup
 NIL
@@ -403,10 +434,10 @@ false
 PENS
 
 BUTTON
-16
-205
-188
-238
+19
+457
+191
+490
 NIL
 go
 T
@@ -420,21 +451,21 @@ NIL
 0
 
 SWITCH
-19
-30
-168
-63
+22
+282
+171
+315
 Strategies3_10
 Strategies3_10
-1
+0
 1
 -1000
 
 SWITCH
-18
-296
-191
-329
+21
+548
+194
+581
 infinite_capital
 infinite_capital
 1
@@ -442,10 +473,10 @@ infinite_capital
 -1000
 
 SLIDER
-19
-255
-191
-288
+22
+507
+194
+540
 extra_gain
 extra_gain
 0
@@ -457,12 +488,12 @@ NIL
 HORIZONTAL
 
 INPUTBOX
-16
-340
-171
-400
+19
+592
+174
+652
 NumberOfTicks
-5000
+6000
 1
 0
 Number
@@ -485,10 +516,10 @@ false
 PENS
 
 BUTTON
-18
-118
-184
-151
+21
+370
+187
+403
 step
 go
 NIL
@@ -499,7 +530,24 @@ NIL
 NIL
 NIL
 NIL
-1
+0
+
+PLOT
+532
+846
+1252
+1063
+PlayersThatPlayed
+Turn
+Number of Players
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -852,6 +900,17 @@ NetLogo 5.3
   <experiment name="11 Estratégias" repetitions="1" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.0]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.1]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.2]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.3]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.4]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.5]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.6]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.7]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.8]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.9]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 1.0]</metric>
     <metric>count turtles with [strategy = 0.0]</metric>
     <metric>count turtles with [strategy = 0.1]</metric>
     <metric>count turtles with [strategy = 0.2]</metric>
@@ -874,59 +933,39 @@ NetLogo 5.3
     <metric>count patches with [patch_owner_strategy = 0.8]</metric>
     <metric>count patches with [patch_owner_strategy = 0.9]</metric>
     <metric>count patches with [patch_owner_strategy = 1.0]</metric>
-    <enumeratedValueSet variable="infinite_capital">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="Strategies3_10">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="extra_gain">
-      <value value="0"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="NumberTurtles">
-      <value value="1200"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="3 Estratégias" repetitions="1" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>mean [total_movements] of turtles with [strategy = 0.1]</metric>
-    <metric>mean [total_movements] of turtles with [strategy = 0.5]</metric>
-    <metric>mean [total_movements] of turtles with [strategy = 1.0]</metric>
-    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.1]</metric>
-    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.5]</metric>
-    <metric>mean [ticks / total_movements] of turtles with [strategy = 1.0]</metric>
-    <metric>count turtles with [strategy = 0.1]</metric>
-    <metric>count turtles with [strategy = 0.5]</metric>
-    <metric>count turtles with [strategy = 1.0]</metric>
-    <metric>count patches with [patch_owner_strategy = 0.1]</metric>
-    <metric>count patches with [patch_owner_strategy = 0.5]</metric>
-    <metric>count patches with [patch_owner_strategy = 1.0]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.0]</metric>
     <metric>sum [global_satisfaction] of turtles with [strategy = 0.1]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.2]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.3]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.4]</metric>
     <metric>sum [global_satisfaction] of turtles with [strategy = 0.5]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.6]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.7]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.8]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.9]</metric>
     <metric>sum [global_satisfaction] of turtles with [strategy = 1.0]</metric>
-    <metric>mean [local_ticks] of turtles with [strategy = 0.1]</metric>
-    <metric>mean [local_ticks] of turtles with [strategy = 0.5]</metric>
-    <metric>mean [local_ticks] of turtles with [strategy = 1.0]</metric>
-    <enumeratedValueSet variable="infinite_capital">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="Strategies3_10">
-      <value value="true"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="extra_gain">
-      <value value="0"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="NumberTurtles">
-      <value value="1200"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="3 Estratégias - Extra Gain" repetitions="1" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles with [strategy = 0.1]</metric>
-    <metric>count turtles with [strategy = 0.5]</metric>
-    <metric>count turtles with [strategy = 1.0]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.0]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.1]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.2]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.3]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.4]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.5]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.6]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.7]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.8]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.9]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 1.0]</metric>
+    <metric>count turtles with [strategy = 0.0 and played?]</metric>
+    <metric>count turtles with [strategy = 0.1 and played?]</metric>
+    <metric>count turtles with [strategy = 0.2 and played?]</metric>
+    <metric>count turtles with [strategy = 0.3 and played?]</metric>
+    <metric>count turtles with [strategy = 0.4 and played?]</metric>
+    <metric>count turtles with [strategy = 0.5 and played?]</metric>
+    <metric>count turtles with [strategy = 0.6 and played?]</metric>
+    <metric>count turtles with [strategy = 0.7 and played?]</metric>
+    <metric>count turtles with [strategy = 0.8 and played?]</metric>
+    <metric>count turtles with [strategy = 0.9 and played?]</metric>
+    <metric>count turtles with [strategy = 1.0 and played?]</metric>
     <enumeratedValueSet variable="infinite_capital">
       <value value="false"/>
     </enumeratedValueSet>
@@ -934,7 +973,7 @@ NetLogo 5.3
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="extra_gain">
-      <value value="0.1"/>
+      <value value="0"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="NumberTurtles">
       <value value="1200"/>
