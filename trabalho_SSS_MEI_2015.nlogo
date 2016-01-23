@@ -103,9 +103,20 @@ to go
   give_patch_color
   update-plot
 
+<<<<<<< Updated upstream
   ;STOP CONDITIONS
   if count patches with[ count turtles-here > 1] = 0 [ stop ]
   if ticks >= NumberOfTicks [ stop ]
+=======
+  ;let contador 0
+  let contador count patches with[ count turtles-here > 1]
+
+  if contador = 0 [
+    write "FIM"
+    stop
+    ]
+
+>>>>>>> Stashed changes
 
   tick
 end
@@ -276,8 +287,8 @@ GRAPHICS-WINDOW
 20
 0
 20
-0
-0
+1
+1
 1
 ticks
 30.0
