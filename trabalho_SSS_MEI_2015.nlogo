@@ -6,8 +6,14 @@ turtles-own [
   local_satisfaction ;; agent satisfaction in the cell (patch)
   global_satisfaction ;; overall agent satisfaction
   strategy  ;; the agent assigned strategy
+  strategy_position  ;; the agent assigned strategy in the config arrays
   escalate?
   local_ticks
+  total_movements
+]
+
+patches-own [
+  patch_owner_strategy  ;; the patch owner assigned strategy
 ]
 
 to init_turtles
@@ -22,8 +28,10 @@ to init_turtles
        set global_satisfaction 100
        set local_satisfaction 20
        set local_ticks 0
+       set total_movements 1
        set strategy array:item strategies s
        set color array:item colors s
+       set strategy_position s
        setxy random-pxcor random-pycor
        hide-turtle
      ]
@@ -37,12 +45,12 @@ to setup
   clear-all
 
   ifelse Strategies3_10 [
-  set strategies array:from-list [0.1 0.5 1.0]
-  set colors array:from-list [green blue red]
+    set strategies array:from-list [0.1 0.5 1.0]
+    set colors array:from-list [green blue red]
   ]
   [
-  set strategies array:from-list [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
-  set colors array:from-list [green blue red orange yellow brown gray magenta cyan pink]
+    set strategies array:from-list [0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
+    set colors array:from-list [48 47 95 45 25 24 17 16 15 14 13]
   ]
 
   init_turtles
@@ -52,9 +60,10 @@ to setup
   create-plot "NumberOfPlayers"
   create-plot "SumOfMoney"
   create-plot "PatchOwners"
+  create-plot "Movements"
 
-  update-plot
   reset-ticks
+  update-plot
 end
 
 to give_patch_color
@@ -65,7 +74,8 @@ to give_patch_color
     [
       let turtlesWithMaxGlobal turtles-here with-max [global_satisfaction]
 
-      ask max-one-of turtlesWithMaxGlobal [local_ticks] [ set pcolor color ]
+      ask max-one-of turtlesWithMaxGlobal [local_ticks] [ set pcolor color
+                                                          set patch_owner_strategy strategy]
     ]
 
   ]
@@ -93,30 +103,22 @@ to go
   ]
 
   ask turtles with [global_satisfaction <= 0] [die]
+
+  ask turtles with [local_satisfaction > 0] [set local_ticks local_ticks + 1]
+
   ask turtles with [local_satisfaction <= 0] [set heading one-of[0 90 180 270]
                                               fd 1
+                                              set total_movements total_movements + 1
                                               set local_satisfaction 20
                                               set local_ticks 0
                                              ]
-  ask turtles with [local_satisfaction > 0] [set local_ticks local_ticks + 1]
 
   give_patch_color
   update-plot
 
-<<<<<<< Updated upstream
   ;STOP CONDITIONS
   if count patches with[ count turtles-here > 1] = 0 [ stop ]
   if ticks >= NumberOfTicks [ stop ]
-=======
-  ;let contador 0
-  let contador count patches with[ count turtles-here > 1]
-
-  if contador = 0 [
-    write "FIM"
-    stop
-    ]
-
->>>>>>> Stashed changes
 
   tick
 end
@@ -204,6 +206,7 @@ to update-plot
   update-plot-numberOfPlayers
   update-plot-sumOfMoney
   update-plot-patchOwners
+  update-plot-movements
 end
 
 to update-plot-numberOfPlayers
@@ -265,6 +268,29 @@ to update-plot-patchOwners
     set i i + 1
    ]
 end
+
+to update-plot-movements
+  set-current-plot "Movements"
+
+  let i 0
+
+  loop[
+     if i = array:length colors[
+      stop
+     ]
+
+    let colorPen array:item colors i
+    let penName word "Strategy: " colorPen
+
+    set-current-plot-pen penName
+
+    ifelse ticks = 0
+    [plot 0]
+    [plot count turtles with [strategy = array:item strategies i and local_ticks = 0]]
+
+    set i i + 1
+   ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -287,8 +313,8 @@ GRAPHICS-WINDOW
 20
 0
 20
-1
-1
+0
+0
 1
 ticks
 30.0
@@ -302,7 +328,7 @@ NumberTurtles
 NumberTurtles
 0
 4000
-1197
+1200
 1
 1
 NIL
@@ -377,10 +403,10 @@ false
 PENS
 
 BUTTON
-18
-118
-190
-151
+16
+205
+188
+238
 NIL
 go
 T
@@ -400,7 +426,7 @@ SWITCH
 63
 Strategies3_10
 Strategies3_10
-0
+1
 1
 -1000
 
@@ -411,7 +437,7 @@ SWITCH
 329
 infinite_capital
 infinite_capital
-0
+1
 1
 -1000
 
@@ -440,6 +466,40 @@ NumberOfTicks
 1
 0
 Number
+
+PLOT
+528
+636
+1249
+840
+Movements
+Turns
+Movements
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+
+BUTTON
+18
+118
+184
+151
+step
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -784,12 +844,84 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.2.1
+NetLogo 5.3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="3 Estratégias" repetitions="10" runMetricsEveryStep="true">
+  <experiment name="11 Estratégias" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles with [strategy = 0.0]</metric>
+    <metric>count turtles with [strategy = 0.1]</metric>
+    <metric>count turtles with [strategy = 0.2]</metric>
+    <metric>count turtles with [strategy = 0.3]</metric>
+    <metric>count turtles with [strategy = 0.4]</metric>
+    <metric>count turtles with [strategy = 0.5]</metric>
+    <metric>count turtles with [strategy = 0.6]</metric>
+    <metric>count turtles with [strategy = 0.7]</metric>
+    <metric>count turtles with [strategy = 0.8]</metric>
+    <metric>count turtles with [strategy = 0.9]</metric>
+    <metric>count turtles with [strategy = 1.0]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.0]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.1]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.2]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.3]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.4]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.5]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.6]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.7]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.8]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.9]</metric>
+    <metric>count patches with [patch_owner_strategy = 1.0]</metric>
+    <enumeratedValueSet variable="infinite_capital">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Strategies3_10">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extra_gain">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="NumberTurtles">
+      <value value="1200"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="3 Estratégias" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>mean [total_movements] of turtles with [strategy = 0.1]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.5]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 1.0]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.1]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.5]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 1.0]</metric>
+    <metric>count turtles with [strategy = 0.1]</metric>
+    <metric>count turtles with [strategy = 0.5]</metric>
+    <metric>count turtles with [strategy = 1.0]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.1]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.5]</metric>
+    <metric>count patches with [patch_owner_strategy = 1.0]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.1]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.5]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 1.0]</metric>
+    <metric>mean [local_ticks] of turtles with [strategy = 0.1]</metric>
+    <metric>mean [local_ticks] of turtles with [strategy = 0.5]</metric>
+    <metric>mean [local_ticks] of turtles with [strategy = 1.0]</metric>
+    <enumeratedValueSet variable="infinite_capital">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Strategies3_10">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extra_gain">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="NumberTurtles">
+      <value value="1200"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="3 Estratégias - Extra Gain" repetitions="1" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <metric>count turtles with [strategy = 0.1]</metric>
@@ -802,36 +934,10 @@ NetLogo 5.2.1
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="extra_gain">
-      <value value="0"/>
+      <value value="0.1"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="NumberTurtles">
-      <value value="2102"/>
-    </enumeratedValueSet>
-  </experiment>
-  <experiment name="11 Estratégias" repetitions="10" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles with [strategy = 0.1]</metric>
-    <metric>count turtles with [strategy = 0.2]</metric>
-    <metric>count turtles with [strategy = 0.3]</metric>
-    <metric>count turtles with [strategy = 0.4]</metric>
-    <metric>count turtles with [strategy = 0.5]</metric>
-    <metric>count turtles with [strategy = 0.6]</metric>
-    <metric>count turtles with [strategy = 0.7]</metric>
-    <metric>count turtles with [strategy = 0.8]</metric>
-    <metric>count turtles with [strategy = 0.9]</metric>
-    <metric>count turtles with [strategy = 1.0]</metric>
-    <enumeratedValueSet variable="infinite_capital">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="Strategies3_10">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="extra_gain">
-      <value value="0"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="NumberTurtles">
-      <value value="2102"/>
+      <value value="1200"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
