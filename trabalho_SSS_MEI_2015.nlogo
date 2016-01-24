@@ -89,7 +89,8 @@ to go
   ask turtles [ set played?  false ]
 
   ask patches[
-    if count turtles-here > 1 [
+    ;if the all the strategies are zero, it will never escalate and the game will be an infinite loop
+    if count turtles-here with [strategy != 0] > 1 [
       let tempTurtlesList []
       ask turtles-here [ set tempTurtlesList lput self tempTurtlesList]
 
@@ -123,6 +124,7 @@ to go
 
   ;STOP CONDITIONS
   if count patches with[ count turtles-here > 1] = 0 [ stop ]
+  if count turtles with[ played? ] = 0 [ stop ] ;;if no one is playing, nothing will change
   if ticks >= NumberOfTicks [ stop ]
 
   tick
@@ -481,7 +483,7 @@ extra_gain
 extra_gain
 0
 4
-0
+0.1
 0.1
 1
 NIL
@@ -493,7 +495,7 @@ INPUTBOX
 174
 652
 NumberOfTicks
-6000
+200000
 1
 0
 Number
