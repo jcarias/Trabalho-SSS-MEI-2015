@@ -90,7 +90,7 @@ to go
 
   ask patches[
     ;if the all the strategies are zero, it will never escalate and the game will be an infinite loop
-    if count turtles-here with [strategy != 0] > 1 [
+    if (count turtles-here > 1 and count turtles-here with [strategy = 0] != count turtles-here) [
       let tempTurtlesList []
       ask turtles-here [ set tempTurtlesList lput self tempTurtlesList]
 
@@ -125,7 +125,7 @@ to go
   ;STOP CONDITIONS
   if count patches with[ count turtles-here > 1] = 0 [ stop ]
   if count turtles with[ played? ] = 0 [ stop ] ;;if no one is playing, nothing will change
-  if ticks >= NumberOfTicks [ stop ]
+  if NumberOfTicks != 0 and ticks >= NumberOfTicks [ stop ]
 
   tick
 end
@@ -495,7 +495,7 @@ INPUTBOX
 174
 652
 NumberOfTicks
-200000
+0
 1
 0
 Number
@@ -894,7 +894,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.3
+NetLogo 5.2.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
