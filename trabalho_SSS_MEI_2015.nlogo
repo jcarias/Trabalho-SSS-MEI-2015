@@ -112,11 +112,16 @@ to go
 
   ask turtles with [local_satisfaction > 0] [set local_ticks local_ticks + 1]
 
-  ask turtles with [local_satisfaction <= 0] [set heading one-of[0 90 180 270]
-                                              fd 1
-                                              set total_movements total_movements + 1
+  ask turtles with [local_satisfaction <= 0] [set total_movements total_movements + 1
                                               set local_satisfaction LocalSatisfaction
                                               set local_ticks 0
+
+                                              ;; a non-wrap world
+                                              while [true] [
+                                                   set heading one-of[0 90 180 270]
+                                                   if can-move? 1 [ fd 1
+                                                                    stop ]
+                                                  ]
                                              ]
 
   give_patch_color
@@ -328,8 +333,8 @@ end
 GRAPHICS-WINDOW
 227
 316
-510
-620
+497
+607
 -1
 -1
 13.0
@@ -343,9 +348,9 @@ GRAPHICS-WINDOW
 0
 1
 0
-20
+19
 0
-20
+19
 0
 0
 1
@@ -909,7 +914,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.3
+NetLogo 5.2.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
