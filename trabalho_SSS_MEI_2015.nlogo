@@ -27,7 +27,7 @@ to init_turtles
 
      create-turtles NumberTurtles [
        set global_satisfaction 100
-       set local_satisfaction 20
+       set local_satisfaction LocalSatisfaction
        set local_ticks 0
        set total_movements 1
        set strategy array:item strategies s
@@ -115,7 +115,7 @@ to go
   ask turtles with [local_satisfaction <= 0] [set heading one-of[0 90 180 270]
                                               fd 1
                                               set total_movements total_movements + 1
-                                              set local_satisfaction 20
+                                              set local_satisfaction LocalSatisfaction
                                               set local_ticks 0
                                              ]
 
@@ -339,8 +339,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 0
 20
@@ -459,7 +459,7 @@ SWITCH
 315
 Strategies3_10
 Strategies3_10
-0
+1
 1
 -1000
 
@@ -483,7 +483,7 @@ extra_gain
 extra_gain
 0
 4
-0.1
+0
 0.1
 1
 NIL
@@ -495,7 +495,7 @@ INPUTBOX
 174
 652
 NumberOfTicks
-0
+5000
 1
 0
 Number
@@ -550,6 +550,21 @@ true
 false
 "" ""
 PENS
+
+SLIDER
+21
+665
+200
+698
+LocalSatisfaction
+LocalSatisfaction
+0
+50
+20
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -894,7 +909,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.2.1
+NetLogo 5.3
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
