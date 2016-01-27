@@ -464,7 +464,7 @@ SWITCH
 315
 Strategies3_10
 Strategies3_10
-1
+0
 1
 -1000
 
@@ -488,7 +488,7 @@ extra_gain
 extra_gain
 0
 4
-0
+0.4
 0.1
 1
 NIL
@@ -500,7 +500,7 @@ INPUTBOX
 174
 652
 NumberOfTicks
-5000
+3000
 1
 0
 Number
@@ -990,12 +990,85 @@ NetLogo 5.2.1
     <metric>count turtles with [strategy = 1.0 and played?]</metric>
     <enumeratedValueSet variable="infinite_capital">
       <value value="false"/>
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Strategies3_10">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extra_gain">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="NumberTurtles">
+      <value value="1200"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="3 Estratégias" repetitions="10" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.1]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 0.5]</metric>
+    <metric>mean [ticks / total_movements] of turtles with [strategy = 1.0]</metric>
+    <metric>count turtles with [strategy = 0.1]</metric>
+    <metric>count turtles with [strategy = 0.5]</metric>
+    <metric>count turtles with [strategy = 1.0]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.1]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.5]</metric>
+    <metric>count patches with [patch_owner_strategy = 1.0]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.1]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 0.5]</metric>
+    <metric>sum [global_satisfaction] of turtles with [strategy = 1.0]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.1]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 0.5]</metric>
+    <metric>mean [total_movements] of turtles with [strategy = 1.0]</metric>
+    <metric>count turtles with [strategy = 0.1 and played?]</metric>
+    <metric>count turtles with [strategy = 0.5 and played?]</metric>
+    <metric>count turtles with [strategy = 1.0 and played?]</metric>
+    <enumeratedValueSet variable="infinite_capital">
+      <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="Strategies3_10">
       <value value="true"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="extra_gain">
       <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="NumberTurtles">
+      <value value="1200"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="3 Estratégias - Movements" repetitions="10" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles with [strategy = 0.1 and local_ticks = 0]</metric>
+    <metric>count turtles with [strategy = 0.5 and local_ticks = 0]</metric>
+    <metric>count turtles with [strategy = 1.0 and local_ticks = 0]</metric>
+    <enumeratedValueSet variable="infinite_capital">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Strategies3_10">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extra_gain">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="NumberTurtles">
+      <value value="1200"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="3 Estratégias - Extra Money" repetitions="10" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count patches with [patch_owner_strategy = 0.1]</metric>
+    <metric>count patches with [patch_owner_strategy = 0.5]</metric>
+    <metric>count patches with [patch_owner_strategy = 1.0]</metric>
+    <enumeratedValueSet variable="infinite_capital">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Strategies3_10">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extra_gain">
+      <value value="0.4"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="NumberTurtles">
       <value value="1200"/>
