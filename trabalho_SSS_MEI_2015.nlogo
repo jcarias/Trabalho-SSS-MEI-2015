@@ -45,7 +45,7 @@ end
 to setup
   clear-all
 
-  ifelse Strategies3_10 [
+  ifelse Strategies3_11 [
     set strategies array:from-list [0.1 0.5 1.0]
     set colors array:from-list [green blue red]
   ]
@@ -462,8 +462,8 @@ SWITCH
 282
 171
 315
-Strategies3_10
-Strategies3_10
+Strategies3_11
+Strategies3_11
 0
 1
 -1000
@@ -572,41 +572,49 @@ NIL
 HORIZONTAL
 
 @#$#@#$#@
-## WHAT IS IT?
+## O QUE É?
 
-(a general understanding of what the model is trying to show or explain)
+Este projeto consiste em replicar o modelo descrito no artigo Games on Cellular Spaces: How Mobility Affects Equilibrium (Andrade, et al., 2009).
+O principal objectivo é perceber como a mobilidade afeta o desempenho dos agentes num jogo espacial utilizando estratégias não cooperativas. Ao contrário dos jogos não-espaciais, onde o agente apenas se preocupa com os seus vizinhos, nos jogos espaciais o agente pode-se deslocar, e assim, a sua vizinhança muda dinamicamente. A mobilidade é entendida como a satisfação de um agente em estar numa determinada localização, movendo-se para outra célula sempre que a sua satisfação atinja um determinado limiar.
 
-## HOW IT WORKS
+## COMO FUNCIONA
 
-(what rules the agents use to create the overall behavior of the model)
+O modelo tem lugar num espaço celular em que cada célula é um quadrado com 4 vizinhos (norte, sul, este e oeste). Inicialmente, existe em cada célula um conjunto de agentes que irão competir entre si por esse espaço num jogo não cooperativo. Aqui um agente é considerado um jogador. Assume-se que quando um agente chega a uma célula está satisfeito com a mesma e não se moverá até que o contrário aconteça.
+Todos os agentes numa célula jogarão entre si (dois a dois) e o resultado de cada jogo irá determinar a satisfação de cada agente com a célula: é a única memória do agente e chama-se a satisfação local. A satisfação local começa sempre positiva quando o agente chega a uma célula e quando baixa para valores iguais ou inferiores a zero, o agente irá escolher uma célula vizinha aleatória, mover-se para lá e competir por ela. O movimento dos agentes é então uma caminhada aleatória pelo espaço celular vizinho (norte sul este ou oeste). Cada agente tem também uma satisfação global e que, tal como a satisfação local, é afetada pelos resultados dos jogos. Todos os agentes têm a mesma satisfação global no princípio da simulação. Se a satisfação global do agente descer até zero ou menos, o agente sairá do jogo (morre).
+Para medir a satisfação é utilizada a medida de capital. A satisfação local representa o capital limitado que o agente pode gastar numa célula; a satisfação global representa o capital que o agente recebe no início do jogo e que quando termina o faz sair do mesmo.
+Os agentes diferem numa única característica: a estratégia. Os agentes são divididos em grupos do mesmo tamanho, sendo que os agentes de um determinado grupo partilham a mesma mixed strategy, embora não estejam conscientes disso. Apesar de competirem individualmente, os agentes representam uma estratégia que será estudada em conjunto.
+A estratégia consiste num valor de probabilidade de um agente escalar (E) ou não escalar (~E) no confronto. As estratégias serão atribuídas aos agentes de forma equitativa, ou seja, os agentes serão agrupados pela sua estratégia (neste caso, existirão 3 estratégias distintas o que leva a sejam criados 3 grupos de agentes). Os agentes serão, depois, distribuídos nas células de forma aleatória o que levará a que exista uma grande probabilidade de vários agentes na mesma célula tenham estratégias semelhantes.
+O agente com maior satisfação global numa determinada célula é considerado o dono dessa célula. Se dois agentes têm o mesmo capital numa determinada célula, o agente há mais tempo nessa célula é considerado o seu dono.
+O modelo tem um número finito de jogadas e cada jogada tem dois períodos distintos. O primeiro prepara e executa os jogos dentro de cada célula, sendo que cada agente apenas joga uma vez por jogada. No segundo cada agente atualiza a sua satisfação global e satisfação local e valida se deve movimentar-se ou sair do jogo. O modelo deixa de ser executado quando se encontra um equilibrium, i.e., quando existe apenas um agente por célula ou quando a sua satisfação de todos os agentes para de descer.
+Num espaço celular, um modelo de jogo pode ser definido como um tuplo de nove valores: M = ( C, n, S, p, A, s, k, g, l), onde C é o espaço celular, n é o número de jogadores, S é o conjunto de ações possíveis que cada jogador pode fazer, p é a função de recompensa, A é o conjunto de grupos dos agentes, s são as mixed strategies, k é o início do número inicial de agentes em cada grupo, g é o máximo de satisfação global e l é o máximo de satisfação local.
+O resultado (payoff) das jogadas é devolvida pela seguinte matriz de recompensa, em pares (A, B ):
 
-## HOW TO USE IT
+ - A Escala (E) x B Escala (E) => (-10, 10)
+ - A Escala (E) x B Não Escala (~E) => (+1, -1)
+ - A Não Escala (~E) x B Escala (E) => (-1, +1)
+ - A Não Escala (~E) x B Não Escala (~E) => (0, 0)
 
-(how to use the model, including a description of each of the items in the Interface tab)
 
-## THINGS TO NOTICE
+## COMO USAR
 
-(suggested things for the user to notice while running the model)
+Informação descrita no Manual fornecido em conjunto com o projeto
 
-## THINGS TO TRY
+## CRÉDITOS E REFERÊNCIAS BIBLIOGRÁFICAS
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+Games on Cellular Spaces: How Mobility Affects Equilibrium (Andrade, et al., 2009)
+http://jasss.soc.surrey.ac.uk/12/1/5.html
 
-## EXTENDING THE MODEL
+Código Lua para o modelo original:
+http://lucc.ess.inpe.br/doku.php?id=papers:mobility
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+Trabalho realizado por
+Grupo 2:
 
-## NETLOGO FEATURES
+ - 71426 João Fernandes
+ - 72230 David Fernandes
+ - 74404 João Carias
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
-
-## RELATED MODELS
-
-(models in the NetLogo Models Library and elsewhere which are of related interest)
-
-## CREDITS AND REFERENCES
-
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+ISCTE-IUL, (C) 2016
 @#$#@#$#@
 default
 true
